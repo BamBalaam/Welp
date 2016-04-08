@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{report}
+\documentclass[a4paper,10pt]{article}
 \usepackage[french]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[left=2.5cm,top=2cm,right=2.5cm,nohead,nofoot]{geometry}
@@ -11,6 +11,7 @@
 \usepackage{tabularx}
 \usepackage{csquotes}
 \usepackage{fullpage}
+\usepackage{pdfpages}
 
 \usepackage[pdftex,
             pdfauthor={A. Caccia, A. Madeira Cortes},
@@ -59,5 +60,28 @@
 
 \newpage
 
+\includepdf[pages={-},angle=90,scale=0.75,pagecommand=\section{Diagramme entité-asssociation}]{./../erdiagrams/ERDia.pdf}
+
+\section{Traducion relationnelle}
+
+User(\underline{ID}, Email, Password, DateSignUp, IsAdmin)
+
+\hspace{-0,5cm}Place(\underline{ID}, Name, Address, GPS, PhoneNum, Website)
+
+\hspace{-0,5cm}Restaurant(\underline{PID}, PriceRange, Banquet, TakeOut, Delivery, Closed)
+
+PID reference Place.ID
+
+\hspace{-0,5cm}Cafe(\underline{PID}, Smoking, Snack)
+
+PID reference Place.ID
+
+\hspace{-0,5cm}Hotel(\underline{PID}, NumStars, NumRooms, PriceRangeDoubleRoom)
+
+PID reference Place.ID
+
+\section{Exigences Fonctionnelles}
+
+- Pour pouvoir créer un "Place", le "User" doit être un administrateur (IsAdmin == True).
 
 \end{document}
