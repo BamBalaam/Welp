@@ -88,6 +88,9 @@ PID reference Place.ID
   \item Pour pouvoir créer, modifier ou supprimer un "Place", le "User" doit être un administrateur (\emph{IsAdmin} == True).
   \item La \emph{Date} d'un "Comment" doit être strictement supérieure à la \emph{CreationDate} d'un "Place".
   \item La \emph{Date} d'un "Comment" doit être strictement supérieure à la \emph{DateSignUp} du "User" qui le poste.
+  \item Il ne peut exister deux "Comment" d'un même "User" pour un même "Place" à la même \emph{Date}.
+  \item La \emph{Note} d'un "Comment" doit être comprise entre 0 et 5 inclus.
+  \item Les \emph{Name} des "Tag" doivent être uniques.
   \item Un "User" ne peut apposer plus d'une fois un "Tag" sur une même "Place".
   \item Tous les \emph{Email} des "User" doivent être uniques.
 \end{itemize}
