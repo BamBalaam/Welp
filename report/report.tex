@@ -80,8 +80,14 @@ PID reference Place.ID
 
 PID reference Place.ID
 
-\section{Exigences Fonctionnelles}
+\section{Contraintes d'intégrité}
 
-- Pour pouvoir créer un "Place", le "User" doit être un administrateur (IsAdmin == True).
+\begin{itemize}
+  \item Pour pouvoir créer, modifier ou supprimer un "Place", le "User" doit être un administrateur (\emph{IsAdmin} == True).
+  \item La \emph{Date} d'un "Comment" doit être strictement supérieure à la \emph{CreationDate} d'un "Place".
+  \item La \emph{Date} d'un "Comment" doit être strictement supérieure à la \emph{DateSignUp} du "User" qui le poste.
+  \item Un "User" ne peut apposer qu'une fois untel "Tag" par "Place".
+  \item Tous les \emph{Email} des "User" doivent être uniques.
+\end{itemize}
 
 \end{document}
