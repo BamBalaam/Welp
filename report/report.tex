@@ -16,7 +16,7 @@
 \usepackage[pdftex,
             pdfauthor={A. Caccia, A. Madeira Cortes},
             pdftitle={Bases de données - Projet},
-            pdfsubject={Bases de données - Projet}]{hyperref}
+            pdfsubject={INFO-H-303 : Bases de données - Projet}]{hyperref}
 
 \linespread{1.1}
 
@@ -34,7 +34,13 @@
         \vfill{}
 
         \begin{center}
-            {\Huge Bases de données - Projet}
+            {\Huge INFO-H-303 : Bases de données}
+        \end{center}
+
+        {\Huge \par}
+
+        \begin{center}
+            {\LARGE Projet : Annuaire d'établissements Horeca}
         \end{center}
 
         {\Huge \par}
@@ -56,15 +62,11 @@
     \end{center}
 \end{titlepage}
 
-\tableofcontents
-
-\newpage
-
 \includepdf[pages={-},angle=90,scale=0.75,pagecommand=\section{Diagramme entité-asssociation}]{./../erdiagrams/ERDia.pdf}
 
 \section{Traducion relationnelle}
 
-User(\underline{ID}, Email, Password, DateSignUp, IsAdmin)
+\noindent User(\underline{ID}, Email, Password, DateSignUp, IsAdmin)
 
 \hspace{-0,5cm}Place(\underline{ID}, Name, Address, GPS, PhoneNum, Website)
 
@@ -86,7 +88,7 @@ PID reference Place.ID
   \item Pour pouvoir créer, modifier ou supprimer un "Place", le "User" doit être un administrateur (\emph{IsAdmin} == True).
   \item La \emph{Date} d'un "Comment" doit être strictement supérieure à la \emph{CreationDate} d'un "Place".
   \item La \emph{Date} d'un "Comment" doit être strictement supérieure à la \emph{DateSignUp} du "User" qui le poste.
-  \item Un "User" ne peut apposer qu'une fois untel "Tag" par "Place".
+  \item Un "User" ne peut apposer plus d'une fois un "Tag" sur une même "Place".
   \item Tous les \emph{Email} des "User" doivent être uniques.
 \end{itemize}
 
