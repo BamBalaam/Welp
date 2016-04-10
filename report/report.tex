@@ -64,7 +64,7 @@
 
 \includepdf[pages={-},angle=90,scale=0.75,pagecommand=\section{Diagramme entité-asssociation}]{./../erdiagrams/ERDia.pdf}
 
-\section{Traducion relationnelle}
+\section{Traduction relationnelle}
 
 \noindent User(\underline{ID}, Email, Password, DateSignUp, IsAdmin)
 
@@ -81,6 +81,26 @@ PID reference Place.ID
 \hspace{-0,5cm}Hotel(\underline{PID}, NumStars, NumRooms, PriceRangeDoubleRoom)
 
 PID reference Place.ID
+
+\hspace{-0,5cm}Comment(\underline{PID}, \underline{UID}, \underline{Date}, Score, Text, Date)
+
+PID reference Place.ID
+
+UID reference User.ID
+
+\hspace{-0,5cm}Tag(\underline{PID}, \underline{UID}, Name)
+
+PID reference Place.ID
+
+UID reference User.ID
+
+\hspace{-0,5cm}Creates(\underline{PID}, \underline{UID}, CreationDate)
+
+PID reference Place.ID
+
+UID reference User.ID
+
+
 
 \section{Contraintes d'intégrité}
 
