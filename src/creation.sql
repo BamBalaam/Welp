@@ -49,6 +49,7 @@ CREATE TABLE Hotel(
 CREATE TABLE "Comment"(
 	PID 			Serial REFERENCES Place(PlaceID),
 	UID				Serial REFERENCES "User"(UserID),
+	Stars           Integer NOT NULL,
 	"Text" 			Text NOT NULL,
 	"Date" 			Timestamp NOT NULL,
 	PRIMARY KEY (PID, UID,"Date")
