@@ -1,14 +1,14 @@
-CREATE TABLE "User"(
+CREATE TABLE Users(
 	UserID			Serial,
 	Username        Varchar(20) UNIQUE NOT NULL,
 	Email			Varchar(100) UNIQUE NOT NULL,
-	"Password"		Varchar(64) NOT NULL,
+	PWD				Varchar(64) NOT NULL,
 	DateSignUp		Varchar(100) NOT NULL,
 	IsAdmin			Boolean DEFAULT False,
 	PRIMARY KEY (UserID)
 );
 
-CREATE TABLE Place(
+CREATE TABLE Places(
 	PlaceID			Serial,
     CreatorID       Serial REFERENCES "User"(UserID),
     CreationDate	Timestamp,
@@ -24,7 +24,7 @@ CREATE TABLE Place(
 	PRIMARY KEY (PlaceID)
 );
 
-CREATE TABLE Restaurant(
+CREATE TABLE Restaurants(
 	PID			Serial REFERENCES Place(PlaceID),
 	PriceRange	Varchar(200),
 	Banquet		Integer,
@@ -33,29 +33,29 @@ CREATE TABLE Restaurant(
 	Closed		Varchar(300)
 );
 
-CREATE TABLE Cafe(
+CREATE TABLE Cafes(
     PID         Serial REFERENCES Place(PlaceID),
 	Smoking		Boolean,
 	Snack		Boolean
 );
 
-CREATE TABLE Hotel(
+CREATE TABLE Hotels(
 	PID			Serial REFERENCES Place(PlaceID),
 	NumStars	Integer,
 	NumRooms	Integer,
 	PriceRangeDoubleRoom	Varchar(200)
 );
 
-CREATE TABLE "Comment"(
+CREATE TABLE Comments(
 	PID 			Serial REFERENCES Place(PlaceID),
 	UID				Serial REFERENCES "User"(UserID),
 	Stars           Integer NOT NULL,
-	"Text" 			Text NOT NULL,
-	"Date" 			Timestamp NOT NULL,
+	TextComment 	Text NOT NULL,
+	CreationDate 	Timestamp NOT NULL,
 	PRIMARY KEY (PID, UID,"Date")
 );
 
-CREATE TABLE Tag(
+CREATE TABLE Tags(
 	PID 			Serial REFERENCES Place(PlaceID),
 	UID				Serial REFERENCES "User"(UserID),
 	Name			Varchar(100) UNIQUE NOT NULL,
