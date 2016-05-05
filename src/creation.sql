@@ -1,6 +1,7 @@
 CREATE TABLE "User"(
 	UserID			Serial,
-	Email			Varchar(100) NOT NULL,
+	Username        Varchar(20) UNIQUE NOT NULL,
+	Email			Varchar(100) UNIQUE NOT NULL,
 	"Password"		Varchar(64) NOT NULL,
 	DateSignUp		Varchar(100) NOT NULL,
 	IsAdmin			Boolean DEFAULT False,
@@ -48,21 +49,14 @@ CREATE TABLE Hotel(
 CREATE TABLE "Comment"(
 	PID 			Serial REFERENCES Place(PlaceID),
 	UID				Serial REFERENCES "User"(UserID),
-	"Text" 			Text,
-	"Date" 			Timestamp,
+	"Text" 			Text NOT NULL,
+	"Date" 			Timestamp NOT NULL,
 	PRIMARY KEY (PID, UID,"Date")
 );
 
 CREATE TABLE Tag(
 	PID 			Serial REFERENCES Place(PlaceID),
 	UID				Serial REFERENCES "User"(UserID),
-	Name			Varchar(100),
-	PRIMARY KEY (PID, UID)
-);
-
-CREATE TABLE Creates(
-	PID 			Serial REFERENCES Place(PlaceID),
-	UID				Serial REFERENCES "User"(UserID),
-	CreationDate	Timestamp,
+	Name			Varchar(100) UNIQUE NOT NULL,
 	PRIMARY KEY (PID, UID)
 );
