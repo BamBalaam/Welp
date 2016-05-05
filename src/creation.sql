@@ -10,7 +10,7 @@ CREATE TABLE Users(
 
 CREATE TABLE Places(
 	PlaceID			Serial,
-    CreatorID       Serial REFERENCES "User"(UserID),
+    CreatorID       Serial REFERENCES Users(UserID),
     CreationDate	Timestamp,
 	Name			Varchar(100) NOT NULL,
 	Street			Varchar(64) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE Places(
 );
 
 CREATE TABLE Restaurants(
-	PID			Serial REFERENCES Place(PlaceID),
+	PID			Serial REFERENCES Places(PlaceID),
 	PriceRange	Varchar(200),
 	Banquet		Integer,
 	TakeOut		Boolean,
@@ -34,30 +34,30 @@ CREATE TABLE Restaurants(
 );
 
 CREATE TABLE Cafes(
-    PID         Serial REFERENCES Place(PlaceID),
+    PID         Serial REFERENCES Places(PlaceID),
 	Smoking		Boolean,
 	Snack		Boolean
 );
 
 CREATE TABLE Hotels(
-	PID			Serial REFERENCES Place(PlaceID),
+	PID			Serial REFERENCES Places(PlaceID),
 	NumStars	Integer,
 	NumRooms	Integer,
 	PriceRangeDoubleRoom	Varchar(200)
 );
 
 CREATE TABLE Comments(
-	PID 			Serial REFERENCES Place(PlaceID),
-	UID				Serial REFERENCES "User"(UserID),
+	PID 			Serial REFERENCES Places(PlaceID),
+	UID				Serial REFERENCES Users(UserID),
 	Stars           Integer NOT NULL,
 	TextComment 	Text NOT NULL,
 	CreationDate 	Timestamp NOT NULL,
-	PRIMARY KEY (PID, UID,"Date")
+	PRIMARY KEY (PID, UID,CreationDate)
 );
 
 CREATE TABLE Tags(
-	PID 			Serial REFERENCES Place(PlaceID),
-	UID				Serial REFERENCES "User"(UserID),
+	PID 			Serial REFERENCES Places(PlaceID),
+	UID				Serial REFERENCES Users(UserID),
 	Name			Varchar(100) UNIQUE NOT NULL,
 	PRIMARY KEY (PID, UID)
 );
