@@ -27,6 +27,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -34,105 +48,21 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: Comment; Type: TABLE; Schema: public; Owner: -
+-- Name: cafes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE "Comment" (
-    pid integer NOT NULL,
-    uid integer NOT NULL,
-    stars integer NOT NULL,
-    "Text" text NOT NULL,
-    "Date" timestamp without time zone NOT NULL
-);
-
-
---
--- Name: Comment_pid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "Comment_pid_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Comment_pid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "Comment_pid_seq" OWNED BY "Comment".pid;
-
-
---
--- Name: Comment_uid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "Comment_uid_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: Comment_uid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "Comment_uid_seq" OWNED BY "Comment".uid;
-
-
---
--- Name: User; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE "User" (
-    userid integer NOT NULL,
-    username character varying(20) NOT NULL,
-    email character varying(100) NOT NULL,
-    "Password" character varying(64) NOT NULL,
-    datesignup character varying(100) NOT NULL,
-    isadmin boolean DEFAULT false
-);
-
-
---
--- Name: User_userid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "User_userid_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: User_userid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "User_userid_seq" OWNED BY "User".userid;
-
-
---
--- Name: cafe; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE cafe (
-    pid integer NOT NULL,
+CREATE TABLE cafes (
+    place_id integer NOT NULL,
     smoking boolean,
     snack boolean
 );
 
 
 --
--- Name: cafe_pid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: cafes_place_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE cafe_pid_seq
+CREATE SEQUENCE cafes_place_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -141,29 +71,30 @@ CREATE SEQUENCE cafe_pid_seq
 
 
 --
--- Name: cafe_pid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: cafes_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE cafe_pid_seq OWNED BY cafe.pid;
+ALTER SEQUENCE cafes_place_id_seq OWNED BY cafes.place_id;
 
 
 --
--- Name: hotel; Type: TABLE; Schema: public; Owner: -
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE hotel (
-    pid integer NOT NULL,
-    numstars integer,
-    numrooms integer,
-    pricerangedoubleroom character varying(200)
+CREATE TABLE comments (
+    place_id integer NOT NULL,
+    user_id integer NOT NULL,
+    stars integer NOT NULL,
+    text_comment text NOT NULL,
+    creation_date timestamp without time zone NOT NULL
 );
 
 
 --
--- Name: hotel_pid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: comments_place_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE hotel_pid_seq
+CREATE SEQUENCE comments_place_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -172,37 +103,87 @@ CREATE SEQUENCE hotel_pid_seq
 
 
 --
--- Name: hotel_pid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: comments_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE hotel_pid_seq OWNED BY hotel.pid;
+ALTER SEQUENCE comments_place_id_seq OWNED BY comments.place_id;
 
 
 --
--- Name: place; Type: TABLE; Schema: public; Owner: -
+-- Name: comments_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE TABLE place (
-    placeid integer NOT NULL,
-    creatorid integer NOT NULL,
-    creationdate timestamp without time zone,
+CREATE SEQUENCE comments_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE comments_user_id_seq OWNED BY comments.user_id;
+
+
+--
+-- Name: hotels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE hotels (
+    place_id integer NOT NULL,
+    num_stars integer,
+    num_rooms integer,
+    price_range_double_room character varying(200)
+);
+
+
+--
+-- Name: hotels_place_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE hotels_place_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: hotels_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE hotels_place_id_seq OWNED BY hotels.place_id;
+
+
+--
+-- Name: places; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE places (
+    place_id integer NOT NULL,
+    creator_id integer NOT NULL,
+    creation_date timestamp without time zone,
     name character varying(100) NOT NULL,
     street character varying(64) NOT NULL,
     num character varying(10) NOT NULL,
-    zip integer NOT NULL,
+    zip text NOT NULL,
     city character varying(100) NOT NULL,
-    longitude double precision,
-    latitude double precision,
-    phonenum character varying(100),
+    longitude real,
+    latitude real,
+    phone character varying(100),
     website character varying(100)
 );
 
 
 --
--- Name: place_creatorid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: places_creator_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE place_creatorid_seq
+CREATE SEQUENCE places_creator_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -211,17 +192,17 @@ CREATE SEQUENCE place_creatorid_seq
 
 
 --
--- Name: place_creatorid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: places_creator_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE place_creatorid_seq OWNED BY place.creatorid;
+ALTER SEQUENCE places_creator_id_seq OWNED BY places.creator_id;
 
 
 --
--- Name: place_placeid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: places_place_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE place_placeid_seq
+CREATE SEQUENCE places_place_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -230,31 +211,31 @@ CREATE SEQUENCE place_placeid_seq
 
 
 --
--- Name: place_placeid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: places_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE place_placeid_seq OWNED BY place.placeid;
+ALTER SEQUENCE places_place_id_seq OWNED BY places.place_id;
 
 
 --
--- Name: restaurant; Type: TABLE; Schema: public; Owner: -
+-- Name: restaurants; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE restaurant (
-    pid integer NOT NULL,
-    pricerange character varying(200),
+CREATE TABLE restaurants (
+    place_id integer NOT NULL,
+    price_range character varying(200),
     banquet integer,
-    takeout boolean,
+    take_out boolean,
     delivery boolean,
-    closed character varying(300)
+    closed bit(14)
 );
 
 
 --
--- Name: restaurant_pid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: restaurants_place_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE restaurant_pid_seq
+CREATE SEQUENCE restaurants_place_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -263,10 +244,10 @@ CREATE SEQUENCE restaurant_pid_seq
 
 
 --
--- Name: restaurant_pid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: restaurants_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE restaurant_pid_seq OWNED BY restaurant.pid;
+ALTER SEQUENCE restaurants_place_id_seq OWNED BY restaurants.place_id;
 
 
 --
@@ -279,21 +260,21 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: tag; Type: TABLE; Schema: public; Owner: -
+-- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE tag (
-    pid integer NOT NULL,
-    uid integer NOT NULL,
+CREATE TABLE tags (
+    place_id integer NOT NULL,
+    user_id integer NOT NULL,
     name character varying(100) NOT NULL
 );
 
 
 --
--- Name: tag_pid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: tags_place_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE tag_pid_seq
+CREATE SEQUENCE tags_place_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -302,17 +283,17 @@ CREATE SEQUENCE tag_pid_seq
 
 
 --
--- Name: tag_pid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: tags_place_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE tag_pid_seq OWNED BY tag.pid;
+ALTER SEQUENCE tags_place_id_seq OWNED BY tags.place_id;
 
 
 --
--- Name: tag_uid_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: tags_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE tag_uid_seq
+CREATE SEQUENCE tags_user_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -321,136 +302,169 @@ CREATE SEQUENCE tag_uid_seq
 
 
 --
--- Name: tag_uid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: tags_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE tag_uid_seq OWNED BY tag.uid;
-
-
---
--- Name: pid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "Comment" ALTER COLUMN pid SET DEFAULT nextval('"Comment_pid_seq"'::regclass);
+ALTER SEQUENCE tags_user_id_seq OWNED BY tags.user_id;
 
 
 --
--- Name: uid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY "Comment" ALTER COLUMN uid SET DEFAULT nextval('"Comment_uid_seq"'::regclass);
-
-
---
--- Name: userid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "User" ALTER COLUMN userid SET DEFAULT nextval('"User_userid_seq"'::regclass);
-
-
---
--- Name: pid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cafe ALTER COLUMN pid SET DEFAULT nextval('cafe_pid_seq'::regclass);
+CREATE TABLE users (
+    user_id integer NOT NULL,
+    username character varying(20) NOT NULL,
+    email character varying(100) NOT NULL,
+    passwd character varying(64) NOT NULL,
+    date_sign_up character varying(100) NOT NULL,
+    is_admin boolean DEFAULT false
+);
 
 
 --
--- Name: pid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY hotel ALTER COLUMN pid SET DEFAULT nextval('hotel_pid_seq'::regclass);
-
-
---
--- Name: placeid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY place ALTER COLUMN placeid SET DEFAULT nextval('place_placeid_seq'::regclass);
+CREATE SEQUENCE users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 --
--- Name: creatorid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY place ALTER COLUMN creatorid SET DEFAULT nextval('place_creatorid_seq'::regclass);
-
-
---
--- Name: pid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY restaurant ALTER COLUMN pid SET DEFAULT nextval('restaurant_pid_seq'::regclass);
+ALTER SEQUENCE users_user_id_seq OWNED BY users.user_id;
 
 
 --
--- Name: pid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: place_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tag ALTER COLUMN pid SET DEFAULT nextval('tag_pid_seq'::regclass);
-
-
---
--- Name: uid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tag ALTER COLUMN uid SET DEFAULT nextval('tag_uid_seq'::regclass);
+ALTER TABLE ONLY cafes ALTER COLUMN place_id SET DEFAULT nextval('cafes_place_id_seq'::regclass);
 
 
 --
--- Name: Comment_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: place_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY "Comment"
-    ADD CONSTRAINT "Comment_pkey" PRIMARY KEY (pid, uid, "Date");
-
-
---
--- Name: User_email_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "User"
-    ADD CONSTRAINT "User_email_key" UNIQUE (email);
+ALTER TABLE ONLY comments ALTER COLUMN place_id SET DEFAULT nextval('comments_place_id_seq'::regclass);
 
 
 --
--- Name: User_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: user_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY "User"
-    ADD CONSTRAINT "User_pkey" PRIMARY KEY (userid);
-
-
---
--- Name: User_username_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "User"
-    ADD CONSTRAINT "User_username_key" UNIQUE (username);
+ALTER TABLE ONLY comments ALTER COLUMN user_id SET DEFAULT nextval('comments_user_id_seq'::regclass);
 
 
 --
--- Name: place_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: place_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY place
-    ADD CONSTRAINT place_pkey PRIMARY KEY (placeid);
-
-
---
--- Name: tag_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tag
-    ADD CONSTRAINT tag_name_key UNIQUE (name);
+ALTER TABLE ONLY hotels ALTER COLUMN place_id SET DEFAULT nextval('hotels_place_id_seq'::regclass);
 
 
 --
--- Name: tag_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: place_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tag
-    ADD CONSTRAINT tag_pkey PRIMARY KEY (pid, uid);
+ALTER TABLE ONLY places ALTER COLUMN place_id SET DEFAULT nextval('places_place_id_seq'::regclass);
+
+
+--
+-- Name: creator_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY places ALTER COLUMN creator_id SET DEFAULT nextval('places_creator_id_seq'::regclass);
+
+
+--
+-- Name: place_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY restaurants ALTER COLUMN place_id SET DEFAULT nextval('restaurants_place_id_seq'::regclass);
+
+
+--
+-- Name: place_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tags ALTER COLUMN place_id SET DEFAULT nextval('tags_place_id_seq'::regclass);
+
+
+--
+-- Name: user_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tags ALTER COLUMN user_id SET DEFAULT nextval('tags_user_id_seq'::regclass);
+
+
+--
+-- Name: user_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users ALTER COLUMN user_id SET DEFAULT nextval('users_user_id_seq'::regclass);
+
+
+--
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (place_id, user_id, creation_date);
+
+
+--
+-- Name: places_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY places
+    ADD CONSTRAINT places_pkey PRIMARY KEY (place_id);
+
+
+--
+-- Name: tags_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_name_key UNIQUE (name);
+
+
+--
+-- Name: tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (place_id, user_id);
+
+
+--
+-- Name: users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: users_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
 
 
 --
@@ -461,67 +475,67 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
--- Name: Comment_pid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: cafes_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY "Comment"
-    ADD CONSTRAINT "Comment_pid_fkey" FOREIGN KEY (pid) REFERENCES place(placeid);
-
-
---
--- Name: Comment_uid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "Comment"
-    ADD CONSTRAINT "Comment_uid_fkey" FOREIGN KEY (uid) REFERENCES "User"(userid);
+ALTER TABLE ONLY cafes
+    ADD CONSTRAINT cafes_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
 
 
 --
--- Name: cafe_pid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: comments_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY cafe
-    ADD CONSTRAINT cafe_pid_fkey FOREIGN KEY (pid) REFERENCES place(placeid);
-
-
---
--- Name: hotel_pid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY hotel
-    ADD CONSTRAINT hotel_pid_fkey FOREIGN KEY (pid) REFERENCES place(placeid);
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
 
 
 --
--- Name: place_creatorid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY place
-    ADD CONSTRAINT place_creatorid_fkey FOREIGN KEY (creatorid) REFERENCES "User"(userid);
-
-
---
--- Name: restaurant_pid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY restaurant
-    ADD CONSTRAINT restaurant_pid_fkey FOREIGN KEY (pid) REFERENCES place(placeid);
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id);
 
 
 --
--- Name: tag_pid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: hotels_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tag
-    ADD CONSTRAINT tag_pid_fkey FOREIGN KEY (pid) REFERENCES place(placeid);
+ALTER TABLE ONLY hotels
+    ADD CONSTRAINT hotels_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
 
 
 --
--- Name: tag_uid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: places_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY tag
-    ADD CONSTRAINT tag_uid_fkey FOREIGN KEY (uid) REFERENCES "User"(userid);
+ALTER TABLE ONLY places
+    ADD CONSTRAINT places_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES users(user_id);
+
+
+--
+-- Name: restaurants_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY restaurants
+    ADD CONSTRAINT restaurants_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+
+
+--
+-- Name: tags_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+
+
+--
+-- Name: tags_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tags
+    ADD CONSTRAINT tags_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id);
 
 
 --
@@ -530,5 +544,5 @@ ALTER TABLE ONLY tag
 
 SET search_path TO "$user", public;
 
-
+INSERT INTO schema_migrations (version) VALUES ('20160507141941');
 
