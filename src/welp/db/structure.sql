@@ -223,7 +223,7 @@ ALTER SEQUENCE places_place_id_seq OWNED BY places.place_id;
 
 CREATE TABLE restaurants (
     place_id integer NOT NULL,
-    price_range character varying(200),
+    price_range integer,
     banquet integer,
     take_out boolean,
     delivery boolean,
@@ -428,19 +428,11 @@ ALTER TABLE ONLY places
 
 
 --
--- Name: tags_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_name_key UNIQUE (name);
-
-
---
 -- Name: tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_pkey PRIMARY KEY (place_id, user_id);
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (place_id, user_id, name);
 
 
 --

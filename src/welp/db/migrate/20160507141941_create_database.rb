@@ -35,7 +35,7 @@ class CreateDatabase < ActiveRecord::Migration
     execute <<-SQL
     CREATE TABLE restaurants (
       place_id			Serial REFERENCES places,
-      price_range	  Varchar(200),
+      price_range	  Integer,
       banquet		    Integer,
       take_out      Boolean,
       delivery	    Boolean,
@@ -46,8 +46,8 @@ class CreateDatabase < ActiveRecord::Migration
     execute <<-SQL
     CREATE TABLE cafes (
       place_id     Serial REFERENCES places,
-      Smoking		   Boolean,
-      Snack		     Boolean
+      smoking		   Boolean,
+      snack		     Boolean
     );
     SQL
 
@@ -75,11 +75,10 @@ class CreateDatabase < ActiveRecord::Migration
     CREATE TABLE tags (
       place_id 			Serial REFERENCES places,
       user_id				Serial REFERENCES users,
-      name			    Varchar(100) UNIQUE NOT NULL,
-      PRIMARY KEY (place_id, user_id)
+      name			    Varchar(100) NOT NULL,
+      PRIMARY KEY (place_id, user_id, name)
     );
     SQL
-
   end
 
   def down
