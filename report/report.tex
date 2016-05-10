@@ -100,8 +100,6 @@ PID reference Place.ID
 
 UID reference User.ID
 
-
-
 \section{Contraintes d'intégrité}
 
 \begin{itemize}
@@ -114,5 +112,41 @@ UID reference User.ID
   \item Un "User" ne peut apposer plus d'une fois un "Tag" sur une même "Place".
   \item Tous les \emph{Email} des "User" doivent être uniques.
 \end{itemize}
+
+\section{Script SQL de création de la BDD}
+
+\section{Requêtes demandées}
+
+\subsection{Requête 1}
+
+\textbf{Tous les utilisateurs qui apprécient au moins 3 établissements que l’utilisateur "Brenda" apprécie.}
+
+\subsection{Requête 2}
+
+\textbf{Tous les établissements qu’apprécie au moins un utilisateur qui apprécie tous les établissements que "Brenda" apprécie.}
+
+\subsection{Requête 3}
+
+\textbf{Tous les établissements pour lesquels il y a au plus un commentaire.}
+
+\subsection{Requête 4}
+
+\textbf{La liste des administrateurs n’ayant pas commenté tous les établissements qu’ils ont crées.}
+
+\subsection{Requête 5}
+
+\textbf{La liste des établissements ayant au minimum trois commentaires, classée selon la moyenne des scores attribués.}
+
+\subsection{Requête 6}
+
+\textbf{La liste des labels étant appliqués à au moins 5 établissements, classée selon la moyenne des scores des établissements ayant ce label.}
+
+\section{Instructions d'installation de l'application}
+
+\section{Scénario de démonstration de l'application}
+
+\section{Apports personnels}
+
+\section{Explications des choix et hypothèses}
 
 \end{document}
