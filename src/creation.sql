@@ -5,18 +5,18 @@ CREATE TABLE Users(
 	username         Varchar(20) UNIQUE NOT NULL,
 	email            Varchar(100) UNIQUE NOT NULL,
 	passwd           Varchar(64) NOT NULL,
-	date_sign_up     Varchar(100) NOT NULL,
+	date_sign_up     Date NOT NULL,
 	is_admin         Boolean DEFAULT False,
 	PRIMARY KEY (user_id)
 );
 CREATE TABLE Places(
 	place_id         Serial,
 	creator_id       Serial REFERENCES Users(user_id),
-	creation_date    Timestamp,
+	creation_date    Date NOT NULL,
 	name             Varchar(100) NOT NULL,
 	street           Varchar(64) NOT NULL,
 	num              Varchar(10) NOT NULL,
-	zip               TEXT NOT NULL,
+	zip              TEXT NOT NULL,
 	city             Varchar(100) NOT NULL,
 	longitude        Real,
 	latitude         Real,
@@ -39,18 +39,19 @@ CREATE TABLE Cafes(
 	snack            Boolean
 );
 CREATE TABLE Hotels(
-	place_id         Serial REFERENCES Places(place_id) ON DELETE CASCADE,
+	place_id          Serial REFERENCES Places(place_id) ON DELETE CASCADE,
 	num_stars         Integer,
 	num_rooms         Integer,
 	price_range_double_room	Varchar(200)
 );
 CREATE TABLE Comments(
-	place_id         Serial REFERENCES Places(place_id) ON DELETE CASCADE,
-	user_id          Serial REFERENCES Users(user_id) ON DELETE CASCADE,
+	place_id          Serial REFERENCES Places(place_id) ON DELETE CASCADE,
+	user_id           Serial REFERENCES Users(user_id) ON DELETE CASCADE,
 	stars             Integer NOT NULL,
 	text_comment      Text NOT NULL,
 	creation_date     Date NOT NULL,
-	PRIMARY KEY (place_id, user_id, creation_date)
+	PRIMARY KEY (place_id, user_id, creation_date),
+	CHECK (stars >= 0 AND stars <= 5)
 );
 CREATE TABLE Tags(
 	place_id          Serial REFERENCES Places(place_id) ON DELETE CASCADE,
