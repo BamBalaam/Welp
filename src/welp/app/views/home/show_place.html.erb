@@ -1,6 +1,10 @@
 <h1><%= @place_info['name'] %></h1>
 
 <section>
+  <h2>Informations</h2>
+  <p>
+    <b>Mean Note</b>: <%= @mean_note %>/5
+  </p>
   <p>
     <b>Address</b>: <%= @place_info['num'] %> <%= @place_info['street'] %>, <%= @place_info['city'] %>, <%= @place_info['zip'] %>
   </p>
@@ -11,8 +15,11 @@
   </p>
   <p>
     <% if @place_info['website'] != 'NULL' %>
-      <b>Website</b>: <%= @place_info['website'] %>
+      <b>Website</b>: <%= link_to @place_info['website'], @place_info['website'] %>
     <% end %>
+  </p>
+  <p>
+    <b>Tags</b>: <%= @place_tags %>
   </p>
 
   <% if @place_info['kind'] == 'restaurant' %>
@@ -90,4 +97,23 @@
       <b>Double room price</b>: <%= @type_info['price_range_double_room'] %>
     </p>
   <% end %>
+</section>
+
+<section>
+<h2>Comments</h2>
+  <ol class="list-group">
+    <% @place_comments.each do |comment| %>
+      <li class="list-group-item clearfix">
+        <h3 class="pull-right">
+          <small class="text_uppercase">Created</small>
+          <%= comment['creation_date'].to_date %>
+        </h3>
+        <h3>
+          <%= comment['username'] %>
+          <small><%= comment['stars'] %>/5</small>
+        </h3>
+        <h4><%= comment['text_comment'] %></h4>
+      </li>
+    <% end %>
+  </ol>
 </section>
