@@ -11,26 +11,6 @@
 </section>
 
 <section>
-  <h2>Tags</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Place</th>
-        <th>Tag</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @tags.each do |tag| %>
-        <tr>
-          <td><%= tag['placename'] %></td>
-          <td><%= tag['tagname'] %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
-
-<section>
   <h2>Comments</h2>
   <table class="table table-striped">
     <thead>
@@ -47,6 +27,26 @@
           <td><%=comment['creation_date'] %></td>
           <td><%=comment['stars'] %>/5</td>
           <td><%=comment['text_comment'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Place</th>
+        <th>Tag</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tags.each do |tag| %>
+        <tr>
+          <td><%= tag['placename'] %></td>
+          <td><%= tag['tagname'] %></td>
         </tr>
       <% end %>
     </tbody>

@@ -20,7 +20,7 @@ class HomeController < ApplicationController
     sql_fetch_placetags = "SELECT name, count(name) FROM tags WHERE place_id = #{params[:id]} GROUP BY name ORDER BY count DESC;"
     @place_tags = ActiveRecord::Base.connection.execute(sql_fetch_placetags).map { |tag| "#{tag['name']} (#{tag['count']})" }.join(', ')
 
-    sql_fetch_comments = "SELECT c.text_comment, c.stars, c.creation_date, u.username FROM comments c INNER JOIN users u ON c.user_id = u.user_id WHERE place_id = #{params[:id]} ORDER BY c.creation_date DESC;"
+    sql_fetch_comments = "SELECT c.text_comment, c.stars, c.creation_date, u.username, u.user_id FROM comments c INNER JOIN users u ON c.user_id = u.user_id WHERE place_id = #{params[:id]} ORDER BY c.creation_date DESC;"
     @place_comments = ActiveRecord::Base.connection.execute(sql_fetch_comments)
 
     @mean_note = begin
@@ -82,7 +82,7 @@ class HomeController < ApplicationController
     redirect_to action: 'show_place'
   end
 
-  def new_place # TODO: coord
+  def new_place
   end
 
   def add_place

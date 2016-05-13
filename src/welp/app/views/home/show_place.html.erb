@@ -125,7 +125,7 @@
           <%= comment['creation_date'].to_date %>
         </h3>
         <h3>
-          <%= comment['username'] %>
+          <%= link_to comment['username'], user_getter_path(comment['user_id']) %>
           <small><%= comment['stars'] %>/5</small>
         </h3>
         <h4><%= comment['text_comment'] %></h4>
