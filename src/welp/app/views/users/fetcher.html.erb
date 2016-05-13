@@ -1,0 +1,33 @@
+<section class="search-form">
+  <%= form_tag({controller: 'users', action: 'fetcher'}, method: 'get') do %>
+    <div class="input-group input-group-lg">
+      <%= label_tag :users_search, nil, class: "sr-only" %>
+      <%= text_field_tag :users_search, nil,
+              placeholder: "Search for users...",
+              class: "form-control input-lg" %>
+      <span class="input-group-btn">
+        <%= submit_tag "Find users", class: "btn btn-primary btn-lg" %>
+      </span>
+    </div>
+  <% end %>
+
+  <h2>Tags</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>email</th>
+        <th>date_sign_up</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= link_to user['username'], user_getter_path(user['user_id']) %></td>
+          <td><%= user['email'] %></td>
+          <td><%= user['date_sign_up'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

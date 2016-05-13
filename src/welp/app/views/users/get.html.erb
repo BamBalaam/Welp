@@ -1,0 +1,54 @@
+<h1>User <%= @user['username'] %></h1>
+
+<section>
+  <h2>Informations</h2>
+  <p>
+    email: <%= @user['email'] %>
+  </p>
+  <p>
+    Registered since <%= @user['date_sign_up'] %>
+  </p>
+</section>
+
+<section>
+  <h2>Tags</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Place</th>
+        <th>Tag</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tags.each do |tag| %>
+        <tr>
+          <td><%= tag['placename'] %></td>
+          <td><%= tag['tagname'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Comments</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Place</th>
+        <th>Date</th>
+        <th>Stars</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @comments.sort_by{|c| -c['stars'].to_i}.each do |comment| %>
+        <tr>
+          <td><%=comment['name'] %></td>
+          <td><%=comment['creation_date'] %></td>
+          <td><%=comment['stars'] %>/5</td>
+          <td><%=comment['text_comment'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
