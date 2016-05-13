@@ -26,7 +26,7 @@ CREATE TABLE Places(
 	PRIMARY KEY (place_id)
 );
 CREATE TABLE Restaurants(
-	place_id         Serial REFERENCES Places(place_id),
+	place_id         Serial REFERENCES Places(place_id) ON DELETE CASCADE,
 	price_range      Integer,
 	banquet          Integer,
 	take_out         Boolean,
@@ -34,27 +34,27 @@ CREATE TABLE Restaurants(
 	closed           Bit(14)
 );
 CREATE TABLE Cafes(
-	place_id         Serial REFERENCES Places(place_id),
+	place_id         Serial REFERENCES Places(place_id) ON DELETE CASCADE,
 	smoking          Boolean,
 	snack            Boolean
 );
 CREATE TABLE Hotels(
-	place_id         Serial REFERENCES Places(place_id),
+	place_id         Serial REFERENCES Places(place_id) ON DELETE CASCADE,
 	num_stars         Integer,
 	num_rooms         Integer,
 	price_range_double_room	Varchar(200)
 );
 CREATE TABLE Comments(
-	place_id         Serial REFERENCES Places(place_id),
-	user_id          Serial REFERENCES Users(user_id),
+	place_id         Serial REFERENCES Places(place_id) ON DELETE CASCADE,
+	user_id          Serial REFERENCES Users(user_id) ON DELETE CASCADE,
 	stars             Integer NOT NULL,
 	text_comment      Text NOT NULL,
 	creation_date     Date NOT NULL,
 	PRIMARY KEY (place_id, user_id, creation_date)
 );
 CREATE TABLE Tags(
-	place_id          Serial REFERENCES Places(place_id),
-	user_id           Serial REFERENCES Users(user_id),
+	place_id          Serial REFERENCES Places(place_id) ON DELETE CASCADE,
+	user_id           Serial REFERENCES Users(user_id) ON DELETE CASCADE,
 	name              Varchar(100) NOT NULL,
 	PRIMARY KEY (place_id, user_id, name)
 );
