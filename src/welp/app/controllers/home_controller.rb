@@ -1,6 +1,10 @@
 class HomeController < ApplicationController
   def index
-    sql_select_places = 'SELECT place_id, name, street, num, zip, city, phone, website FROM places;'
+    if params[:places].nil?
+      sql_select_places = 'SELECT place_id, name, street, num, zip, city, phone, website FROM places;'
+    else
+      sql_select_places = "SELECT place_id, name, street, num, zip, city, phone, website FROM places where lower(name) LIKE '%#{params[:places]}%' OR lower(city) LIKE '%#{params[:places]}%' ORDER BY name = '#{params[:places]} DESC', name ASC, city ASC"
+    end
     @places = ActiveRecord::Base.connection.execute(sql_select_places)
   end
 
@@ -19,7 +23,11 @@ class HomeController < ApplicationController
     sql_fetch_comments = "SELECT c.text_comment, c.stars, c.creation_date, u.username FROM comments c INNER JOIN users u ON c.user_id = u.user_id WHERE place_id = #{params[:id]} ORDER BY c.creation_date DESC;"
     @place_comments = ActiveRecord::Base.connection.execute(sql_fetch_comments)
 
-    @mean_note = @place_comments.inject(0) { |acc, comment| acc += comment['stars'].to_f } / @place_comments.count
+    @mean_note = begin
+                   @place_comments.inject(0) { |acc, comment| acc += comment['stars'].to_f } / @place_comments.count
+                 rescue
+                   0
+                 end
   end
 
   def add_tag
@@ -72,5 +80,29 @@ class HomeController < ApplicationController
       ActiveRecord::Base.connection.execute(sql_update_hotel)
     end
     redirect_to action: 'show_place'
+  end
+
+  def new_place # TODO: coord
+  end
+
+  def add_place
+    sql_add_place = "INSERT INTO places(creator_id, creation_date, name, street, num, zip, city, phone, website, kind) VALUES (#{current_user['user_id']}, '#{DateTime.now.to_date}', '#{params[:name]}', '#{params[:street]}', #{params[:num]}, '#{params[:zip]}', '#{params[:city]}', '#{params[:phone]}', '#{params[:website]}', '#{params[:kind]}') returning place_id;"
+    place_id = ActiveRecord::Base.connection.execute(sql_add_place).first['place_id']
+    sql_add_type = case params[:kind]
+                   when 'cafe'
+                     "INSERT INTO cafes(place_id, smoking, snack) VALUES (#{place_id}, '#{params[:smoking] == 't'}', '#{params[:snack] == 't'}');"
+                   when 'hotel'
+                     "INSERT INTO hotels(place_id, num_stars, num_rooms, price_range_double_room) VALUES (#{place_id}, #{params[:num_stars]}, #{params[:num_rooms]}, #{params[:price_range_double_room]});"
+                   when 'restaurant'
+                     "INSERT INTO restaurants(place_id, price_range, banquet, take_out, delivery, closed) VALUES (#{place_id}, #{params[:price_range]}, #{params[:banquet]}, '#{params[:take_out] == 't'}', '#{params[:delivery] == 't'}', 'B00000000000000');"
+    end
+    ActiveRecord::Base.connection.execute(sql_add_type)
+    redirect_to :root
+  end
+
+  def delete
+    sql_delete_place = "DELETE FROM places WHERE place_id = #{params[:id]};"
+    ActiveRecord::Base.connection.execute(sql_delete_place)
+    redirect_to :root
   end
 end

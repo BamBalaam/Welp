@@ -16,10 +16,14 @@ Rails.application.routes.draw do
   get 'password_sent' => 'authentication#password_sent'
   get 'places/:id' => 'home#show_place', as: :place
   post 'places/:id' => 'home#add_tag'
+  delete 'places/delete/:id' => 'home#delete', as: :place_delete
   get 'places/comment/:id' => 'home#new_comment', as: :place_comments
   post 'places/comment/:id' => 'home#add_comment'
+  get 'places/add/new' => 'home#new_place', as: :new_place
+  post 'places/add/new' => 'home#add_place'
   get 'places/edit/:id' => 'home#edit_place', as: :place_edit
   put 'places/edit/:id' => 'home#change_place'
+  # get 'search/:query' => 'home#search', as: :search
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -54,6 +54,38 @@ CREATE TYPE place_type AS ENUM (
 );
 
 
+--
+-- Name: comment_after_creation(date, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION comment_after_creation(date, integer) RETURNS boolean
+    LANGUAGE sql
+    AS $_$
+        select exists (
+          select 1
+          from places
+          where place_id = $2
+            and creation_date <= $1
+        );
+        $_$;
+
+
+--
+-- Name: is_superuser(integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION is_superuser(integer) RETURNS boolean
+    LANGUAGE sql
+    AS $_$
+      select exists (
+        select 1
+        from users
+        where user_id = $1
+          and is_admin = true
+      );
+      $_$;
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -97,7 +129,9 @@ CREATE TABLE comments (
     user_id integer NOT NULL,
     stars integer NOT NULL,
     text_comment text NOT NULL,
-    creation_date date NOT NULL
+    creation_date date NOT NULL,
+    CONSTRAINT comment_created_after_place_creation CHECK (comment_after_creation(creation_date, place_id)),
+    CONSTRAINT comments_stars_check CHECK (((stars >= 0) AND (stars <= 5)))
 );
 
 
@@ -177,7 +211,7 @@ ALTER SEQUENCE hotels_place_id_seq OWNED BY hotels.place_id;
 CREATE TABLE places (
     place_id integer NOT NULL,
     creator_id integer NOT NULL,
-    creation_date date,
+    creation_date date NOT NULL,
     name character varying(100) NOT NULL,
     street character varying(64) NOT NULL,
     num character varying(10) NOT NULL,
@@ -187,7 +221,8 @@ CREATE TABLE places (
     latitude real,
     phone character varying(100),
     website character varying(100),
-    kind place_type
+    kind place_type,
+    CONSTRAINT place_constructed_by_admin CHECK (is_superuser(creator_id))
 );
 
 
@@ -329,7 +364,7 @@ CREATE TABLE users (
     username character varying(20) NOT NULL,
     email character varying(100) NOT NULL,
     passwd character varying(64) NOT NULL,
-    date_sign_up character varying(100) NOT NULL,
+    date_sign_up date NOT NULL,
     is_admin boolean DEFAULT false
 );
 
@@ -472,6 +507,20 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: places_cities_lowercase; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX places_cities_lowercase ON places USING btree (lower((city)::text) varchar_pattern_ops);
+
+
+--
+-- Name: places_names_lowercase; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX places_names_lowercase ON places USING btree (lower((name)::text) varchar_pattern_ops);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -483,7 +532,7 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 --
 
 ALTER TABLE ONLY cafes
-    ADD CONSTRAINT cafes_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+    ADD CONSTRAINT cafes_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE;
 
 
 --
@@ -491,7 +540,7 @@ ALTER TABLE ONLY cafes
 --
 
 ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+    ADD CONSTRAINT comments_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE;
 
 
 --
@@ -499,7 +548,7 @@ ALTER TABLE ONLY comments
 --
 
 ALTER TABLE ONLY comments
-    ADD CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id);
+    ADD CONSTRAINT comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE;
 
 
 --
@@ -507,7 +556,7 @@ ALTER TABLE ONLY comments
 --
 
 ALTER TABLE ONLY hotels
-    ADD CONSTRAINT hotels_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+    ADD CONSTRAINT hotels_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE;
 
 
 --
@@ -515,7 +564,7 @@ ALTER TABLE ONLY hotels
 --
 
 ALTER TABLE ONLY places
-    ADD CONSTRAINT places_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES users(user_id);
+    ADD CONSTRAINT places_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES users(user_id) ON DELETE CASCADE;
 
 
 --
@@ -523,7 +572,7 @@ ALTER TABLE ONLY places
 --
 
 ALTER TABLE ONLY restaurants
-    ADD CONSTRAINT restaurants_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+    ADD CONSTRAINT restaurants_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE;
 
 
 --
@@ -531,7 +580,7 @@ ALTER TABLE ONLY restaurants
 --
 
 ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+    ADD CONSTRAINT tags_place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id) ON DELETE CASCADE;
 
 
 --
@@ -539,7 +588,7 @@ ALTER TABLE ONLY tags
 --
 
 ALTER TABLE ONLY tags
-    ADD CONSTRAINT tags_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id);
+    ADD CONSTRAINT tags_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE;
 
 
 --
@@ -549,4 +598,8 @@ ALTER TABLE ONLY tags
 SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('20160507141941');
+
+INSERT INTO schema_migrations (version) VALUES ('20160513192705');
+
+INSERT INTO schema_migrations (version) VALUES ('20160513193356');
 

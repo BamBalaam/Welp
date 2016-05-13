@@ -16,6 +16,9 @@
 
 <section class="search-results">
   <h2>Results</h2>
+  <% if current_user && current_user['is_admin'] == 't' %>
+    <%= link_to "Add a new place", new_place_path %>
+  <% end %>
   <table class="table table-striped">
     <thead>
       <tr>

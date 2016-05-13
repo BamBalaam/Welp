@@ -4,6 +4,7 @@
   <h2>Informations</h2>
   <% if current_user && current_user['is_admin'] == 't' %>
     <%= link_to "Modify", place_edit_path(params[:id]) %>
+    <%= link_to "Delete", place_delete_path(params[:id]) , method: :delete%>
   <% end %>
   <p>
     <b>Mean Note</b>: <%= @mean_note.round(2) %>/5
