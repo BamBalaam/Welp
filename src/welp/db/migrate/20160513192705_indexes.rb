@@ -15,6 +15,13 @@ class Indexes < ActiveRecord::Migration
       places (lower(city) varchar_pattern_ops);
   SQL
 
+  execute <<-SQL
+    CREATE INDEX
+      users_usrenames_lowercase
+    ON
+      users (lower(username) varchar_pattern_ops);
+  SQL
+
   def down
     execute <<-SQL
       DROP INDEX places_names_lowercase;

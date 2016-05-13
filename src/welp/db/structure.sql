@@ -528,6 +528,13 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: users_usrenames_lowercase; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX users_usrenames_lowercase ON users USING btree (lower((username)::text) varchar_pattern_ops);
+
+
+--
 -- Name: cafes_place_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
