@@ -43,6 +43,17 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 SET search_path = public, pg_catalog;
 
+--
+-- Name: place_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE place_type AS ENUM (
+    'hotel',
+    'cafe',
+    'restaurant'
+);
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -175,7 +186,8 @@ CREATE TABLE places (
     longitude real,
     latitude real,
     phone character varying(100),
-    website character varying(100)
+    website character varying(100),
+    kind place_type
 );
 
 

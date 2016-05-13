@@ -42,12 +42,12 @@ end
 
 def places(cafes, restaurants)
   places = []
-  cafes.each { |c| places.push places_informations(c) }
-  restaurants.each { |r| places.push places_informations(r) }
+  cafes.each { |c| places.push places_informations(c, 'cafe') }
+  restaurants.each { |r| places.push places_informations(r, 'restaurant') }
   cafes_infos = cafes.map { |c| cafes_informations(c) }
   restaurants_infos = restaurants.map { |r| restaurants_informations(r) }
   File.open('seeds.rb', 'a') do |f|
-    f.puts "\tINSERT INTO places (creator_id, creation_date, name, street, num, zip, city, longitude, latitude, phone, website) VALUES"
+    f.puts "\tINSERT INTO places (creator_id, creation_date, name, street, num, zip, city, longitude, latitude, phone, website, kind) VALUES"
     f.puts (places.join(",\n") + ";\n")
     f.puts "\tINSERT INTO cafes (place_id, smoking, snack) VALUES"
     f.puts (cafes_infos.join(",\n") + ";\n")
@@ -141,7 +141,7 @@ def users_from_tags(places, admins)
   end
 end
 
-def places_informations(place)
+def places_informations(place, type)
   creator = place.attr('nickname')
   creation_date = place.attr('creationDate')
   info = place.at_xpath('Informations')
@@ -154,7 +154,7 @@ def places_informations(place)
   lat = info.at_xpath('Address/Latitude').text
   phone = (tmp = info.at_xpath('Tel')) ? tmp.text : 'NULL'
   site = (tmp = info.at_xpath('Site')) ? tmp.attr('link') : 'NULL'
-  "\t\t((SELECT user_id FROM users WHERE username = '#{creator}'), '#{creation_date}', '#{name}', '#{street}', '#{num}', '#{zipcode}', '#{city}', '#{long}', '#{lat}', '#{phone}', '#{site}')"
+  "\t\t((SELECT user_id FROM users WHERE username = '#{creator}'), '#{creation_date}', '#{name}', '#{street}', '#{num}', '#{zipcode}', '#{city}', '#{long}', '#{lat}', '#{phone}', '#{site}', '#{type}')"
 end
 
 def cafes_informations(cafe)

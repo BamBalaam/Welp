@@ -2,6 +2,7 @@ class CreateDatabase < ActiveRecord::Migration
   def up
     execute <<-SQL
       CREATE EXTENSION pgcrypto;
+      CREATE TYPE place_type AS ENUM ('hotel', 'cafe', 'restaurant');
     SQL
 
     execute <<-SQL
@@ -28,7 +29,8 @@ class CreateDatabase < ActiveRecord::Migration
       longitude		     Real,
       latitude	       Real,
       phone		         Varchar(100),
-      website			     Varchar(100)
+      website			     Varchar(100),
+      kind             place_type
     );
     SQL
 
@@ -83,10 +85,6 @@ class CreateDatabase < ActiveRecord::Migration
 
   def down
     execute <<-SQL
-      DROP EXTENSION pgcrypt;
-    SQL
-
-    execute <<-SQL
       DROP TABLE users CASCADE;
       DROP TABLE places CASCADE;
       DROP TABLE restaurants CASCADE;
@@ -94,6 +92,11 @@ class CreateDatabase < ActiveRecord::Migration
       DROP TABLE hotels CASCADE;
       DROP TABLE comments CASCADE;
       DROP TABLE tags CASCADE;
+    SQL
+
+    execute <<-SQL
+      DROP EXTENSION pgcrypt;
+      DROP TYPE place_type;
     SQL
   end
 end
