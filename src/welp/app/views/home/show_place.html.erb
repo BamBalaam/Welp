@@ -1,0 +1,93 @@
+<h1><%= @place_info['name'] %></h1>
+
+<section>
+  <p>
+    <b>Address</b>: <%= @place_info['num'] %> <%= @place_info['street'] %>, <%= @place_info['city'] %>, <%= @place_info['zip'] %>
+  </p>
+  <p>
+    <% if @place_info['phone'] != 'NULL' %>
+      <b>Phone number</b>: <%= @place_info['phone'] %>
+    <% end %>
+  </p>
+  <p>
+    <% if @place_info['website'] != 'NULL' %>
+      <b>Website</b>: <%= @place_info['website'] %>
+    <% end %>
+  </p>
+
+  <% if @place_info['kind'] == 'restaurant' %>
+    <p>
+      <b>Price range</b>: <%= @type_info['price_range'] %>
+    </p>
+    <p>
+      <b>Places for banquet</b>: <%= @type_info['banquet'] %>
+    </p>
+    <p>
+      <% if @type_info['take_out'] == 't' %>
+        Possibility to take away
+      <% end %>
+    </p>
+    <p>
+      <% if @type_info['delivery'] == 't' %>
+        <b>Delivery</b>: yes
+      <% end %>
+    </p>
+    <p>
+      <b>Openings</b>:
+    </p>
+    <p>
+      <table>
+        <thead>
+          <tr>
+            <th>Monday AM</th>
+            <th>Monday PM</th>
+            <th>Tuesday AM</th>
+            <th>Tuesday PM</th>
+            <th>Wednesday AM</th>
+            <th>Wednesday PM</th>
+            <th>Thursday AM</th>
+            <th>Thursday PM</th>
+            <th>Friday AM</th>
+            <th>Friday PM</th>
+            <th>Saturday AM</th>
+            <th>Saturday PM</th>
+            <th>Sunday AM</th>
+            <th>Sunday PM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <% @type_info['closed'].chars.each do |c| %>
+              <% if c == '1' %>
+                <td>X</td>
+              <% else %>
+                <td>O</td>
+              <% end %>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </p>
+  <% elsif @place_info['kind'] == 'cafe' %>
+    <p>
+      <% if @type_info['snack'] == 't' %>
+        <b>Snack</b>
+      <% end %>
+    </p>
+    <p>
+      <% if @type_info['smoking'] == 't' %>
+        <b>Smoking authorized</b>
+      <% end %>
+    </p>
+  <% else %>
+    <p>
+      <b><%= @type_info['num_stars'] %> stars</b>
+    </p>
+    <p>
+      <b><%= @type_info['num_rooms'] %> rooms</b>
+    </p>
+    <p>
+      <b>Double room price</b>: <%= @type_info['price_range_double_room'] %>
+    </p>
+  <% end %>
+</section>
