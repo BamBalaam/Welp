@@ -1,0 +1,13 @@
+<h1>New comment</h1>
+
+<%= form_tag({controller: 'home', action: 'add_comment'}, method: 'post') do %>
+<div class="form-group">
+  <%= label_tag(:stars, "NOTE (out of 5):") %>
+  <%= number_field_tag :stars, 5, min: 0, max: 5, step: 1 %>
+</div>
+  <div class="form-group">
+    <%=label_tag(:comment, "New comment:") %>
+    <%=text_field_tag :comment , nil, class: "form-control"%>
+  </div>
+  <%= submit_tag 'submit'%>
+<% end %>

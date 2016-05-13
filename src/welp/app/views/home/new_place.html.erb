@@ -1,0 +1,88 @@
+<h1>Create</h1>
+
+<%= form_tag({controller: 'home', action: 'add_place'}, {method: 'post'}) do %>
+  <div class="form-group">
+    <%=label_tag(:name, "Place Name:") %>
+    <%=text_field_tag :name, nil, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%=label_tag(:street, "Street:") %>
+    <%=text_field_tag :street, nil, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%=label_tag(:num, "Number:") %>
+    <%= number_field_tag :num, nil, min: 0, step: 1, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%=label_tag(:zip, "Zip code:") %>
+    <%=text_field_tag :zip, nil, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%=label_tag(:city, "City:") %>
+    <%=text_field_tag :city, nil, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%=label_tag(:phone, "Phone:") %>
+    <%=text_field_tag :phone, nil, class: "form-control" %>
+  </div>
+  <div class="form-group">
+    <%=label_tag(:website, "Phone:") %>
+    <%=text_field_tag :website, nil, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%=label_tag(:kind, "Cafe:") %>
+    <%= radio_button_tag :kind, 'cafe', class: "radio" %>&nbsp;&nbsp;&nbsp;
+    <%=label_tag(:kind, "Hotel:") %>
+    <%= radio_button_tag :kind, 'hotel', class: "radio" %>&nbsp;&nbsp;&nbsp;
+    <%=label_tag(:kind, "Restaurant:") %>
+    <%= radio_button_tag :kind, 'restaurant', class: "radio" %>
+  </div>
+
+<h2>Specific options for cafes</h2>
+    <div class="form-group">
+      <%=label_tag(:smoking, "Smoking:") %>
+      <%= check_box_tag :smoking, 't', nil, class: "checkbox" %>
+    </div>
+    <div class="form-group">
+      <%=label_tag(:snack, "Snack:") %>
+      <%= check_box_tag :snack, 't', nil, class: "checkbox" %>
+    </div>
+
+
+<h2>Specific options for restaurants</h2>
+    <div class="form-group">
+      <%=label_tag(:price_range, "Price range:") %>
+      <%=number_field_tag :price_range, nil, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%=label_tag(:banquet, "Places for banquet:") %>
+      <%=number_field_tag :banquet, nil, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%=label_tag(:take_out, "Take Away:") %>
+      <%= check_box_tag :take_out, 't', nil, class: "checkbox" %>
+    </div>
+    <div class="form-group">
+      <%=label_tag(:delivery, "Delivery:") %>
+      <%= check_box_tag :delivery, 't', nil, class: "checkbox" %>
+    </div>
+
+<h2>Specific options for hotels</h2>
+    <div class="form-group">
+      <%=label_tag(:num_stars, "Stars:") %>
+      <%=number_field_tag :num_stars, nil, min:0, max: 5, step:1, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%=label_tag(:num_rooms, "Rooms:") %>
+      <%=number_field_tag :num_rooms, nil, min:0, step:1, class: "form-control" %>
+    </div>
+    <div class="form-group">
+      <%=label_tag(:price_range_double_room, "Double room price:") %>
+      <%=number_field_tag :price_range_double_room, nil, min:0, step:1, class: "form-control" %>
+    </div>
+  <div class="form-group">
+    <%= submit_tag 'Update', class: "btn btn-primary btn-lg" %>&nbsp;&nbsp;&nbsp;
+    <%= submit_tag 'Clear Form', :type => 'reset', class: "btn btn-primary btn-lg" %>
+  </div>
+<% end %>

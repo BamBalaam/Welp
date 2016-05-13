@@ -1,0 +1,135 @@
+<h1><%= @place_info['name'] %></h1>
+
+<section>
+  <h2>Informations</h2>
+  <% if current_user && current_user['is_admin'] == 't' %>
+    <%= link_to "Modify", place_edit_path(params[:id]) %>
+    <%= link_to "Delete", place_delete_path(params[:id]) , method: :delete%>
+  <% end %>
+  <p>
+    <b>Mean Note</b>: <%= @mean_note.round(2) %>/5
+  </p>
+  <p>
+    <b>Address</b>: <%= @place_info['num'] %> <%= @place_info['street'] %>, <%= @place_info['city'] %>, <%= @place_info['zip'] %>
+  </p>
+  <p>
+    <% if @place_info['phone'] != 'NULL' %>
+      <b>Phone number</b>: <%= @place_info['phone'] %>
+    <% end %>
+  </p>
+  <p>
+    <% if @place_info['website'] != 'NULL' %>
+      <b>Website</b>: <%= link_to @place_info['website'], @place_info['website'] %>
+    <% end %>
+  </p>
+  <p>
+    <b>Tags</b>: <%= @place_tags %>
+    <% if current_user %>
+      <%= form_tag({controller: 'home', action: 'add_tag', url: 'add_tag'}, method: 'post') do %>
+        <%= select_tag :addtag, options_from_collection_for_select(@all_tags, :last, :last ) %>
+        or add a new tag
+        <%=text_field_tag :addtagmanual %>
+        <%= submit_tag 'add'%>
+      <% end %>
+    <% end %>
+  </p>
+
+  <% if @place_info['kind'] == 'restaurant' %>
+    <p>
+      <b>Price range</b>: <%= @type_info['price_range'] %> eur.
+    </p>
+    <p>
+      <b>Places for banquet</b>: <%= @type_info['banquet'] %>
+    </p>
+    <p>
+      <% if @type_info['take_out'] == 't' %>
+        Possibility to take away
+      <% end %>
+    </p>
+    <p>
+      <% if @type_info['delivery'] == 't' %>
+        <b>Delivery</b>: yes
+      <% end %>
+    </p>
+    <p>
+      <b>Openings</b>:
+    </p>
+    <p>
+      <table>
+        <thead>
+          <tr>
+            <th>Monday AM</th>
+            <th>Monday PM</th>
+            <th>Tuesday AM</th>
+            <th>Tuesday PM</th>
+            <th>Wednesday AM</th>
+            <th>Wednesday PM</th>
+            <th>Thursday AM</th>
+            <th>Thursday PM</th>
+            <th>Friday AM</th>
+            <th>Friday PM</th>
+            <th>Saturday AM</th>
+            <th>Saturday PM</th>
+            <th>Sunday AM</th>
+            <th>Sunday PM</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <% @type_info['closed'].chars.each do |c| %>
+              <% if c == '1' %>
+                <td>X</td>
+              <% else %>
+                <td>O</td>
+              <% end %>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </p>
+  <% elsif @place_info['kind'] == 'cafe' %>
+    <p>
+      <% if @type_info['snack'] == 't' %>
+        <b>Snack</b>
+      <% end %>
+    </p>
+    <p>
+      <% if @type_info['smoking'] == 't' %>
+        <b>Smoking authorized</b>
+      <% end %>
+    </p>
+  <% else %>
+    <p>
+      <b><%= @type_info['num_stars'] %> stars</b>
+    </p>
+    <p>
+      <b><%= @type_info['num_rooms'] %> rooms</b>
+    </p>
+    <p>
+      <b>Double room price</b>: <%= @type_info['price_range_double_room'] %>
+    </p>
+  <% end %>
+</section>
+
+<section>
+<h2>Comments</h2>
+  <% if current_user %>
+    <%= link_to "New comment", place_comments_path(params[:id]) %>
+  <% end %>
+
+  <ol class="list-group">
+    <% @place_comments.each do |comment| %>
+      <li class="list-group-item clearfix">
+        <h3 class="pull-right">
+          <small class="text_uppercase">Created</small>
+          <%= comment['creation_date'].to_date %>
+        </h3>
+        <h3>
+          <%= comment['username'] %>
+          <small><%= comment['stars'] %>/5</small>
+        </h3>
+        <h4><%= comment['text_comment'] %></h4>
+      </li>
+    <% end %>
+  </ol>
+</section>
