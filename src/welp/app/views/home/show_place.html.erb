@@ -2,8 +2,11 @@
 
 <section>
   <h2>Informations</h2>
+  <% if current_user && current_user['is_admin'] == 't' %>
+    <%= link_to "Modify", place_edit_path(params[:id]) %>
+  <% end %>
   <p>
-    <b>Mean Note</b>: <%= @mean_note %>/5
+    <b>Mean Note</b>: <%= @mean_note.round(2) %>/5
   </p>
   <p>
     <b>Address</b>: <%= @place_info['num'] %> <%= @place_info['street'] %>, <%= @place_info['city'] %>, <%= @place_info['zip'] %>
@@ -20,11 +23,19 @@
   </p>
   <p>
     <b>Tags</b>: <%= @place_tags %>
+    <% if current_user %>
+      <%= form_tag({controller: 'home', action: 'add_tag', url: 'add_tag'}, method: 'post') do %>
+        <%= select_tag :addtag, options_from_collection_for_select(@all_tags, :last, :last ) %>
+        or add a new tag
+        <%=text_field_tag :addtagmanual %>
+        <%= submit_tag 'add'%>
+      <% end %>
+    <% end %>
   </p>
 
   <% if @place_info['kind'] == 'restaurant' %>
     <p>
-      <b>Price range</b>: <%= @type_info['price_range'] %>
+      <b>Price range</b>: <%= @type_info['price_range'] %> eur.
     </p>
     <p>
       <b>Places for banquet</b>: <%= @type_info['banquet'] %>
@@ -101,6 +112,10 @@
 
 <section>
 <h2>Comments</h2>
+  <% if current_user %>
+    <%= link_to "New comment", place_comments_path(params[:id]) %>
+  <% end %>
+
   <ol class="list-group">
     <% @place_comments.each do |comment| %>
       <li class="list-group-item clearfix">

@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   put 'account_settings' => 'authentication#set_account_info'
   get 'password_sent' => 'authentication#password_sent'
   get 'places/:id' => 'home#show_place', as: :place
+  post 'places/:id' => 'home#add_tag'
+  get 'places/comment/:id' => 'home#new_comment', as: :place_comments
+  post 'places/comment/:id' => 'home#add_comment'
+  get 'places/edit/:id' => 'home#edit_place', as: :place_edit
+  put 'places/edit/:id' => 'home#change_place'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

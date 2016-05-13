@@ -20,7 +20,7 @@ class CreateDatabase < ActiveRecord::Migration
     CREATE TABLE places (
       place_id			   Serial PRIMARY KEY,
       creator_id       Serial REFERENCES users (user_id),
-      creation_date	   Timestamp,
+      creation_date	   Date,
       name			       Varchar(100) NOT NULL,
       street			     Varchar(64) NOT NULL,
       num				       Varchar(10) NOT NULL,
@@ -68,7 +68,7 @@ class CreateDatabase < ActiveRecord::Migration
       user_id				   Serial REFERENCES users,
       stars            Integer NOT NULL,
       text_comment 	   Text NOT NULL,
-      creation_date 	 Timestamp NOT NULL,
+      creation_date 	 Date NOT NULL,
       PRIMARY KEY (place_id, user_id,creation_date)
     );
     SQL

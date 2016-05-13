@@ -97,7 +97,7 @@ CREATE TABLE comments (
     user_id integer NOT NULL,
     stars integer NOT NULL,
     text_comment text NOT NULL,
-    creation_date timestamp without time zone NOT NULL
+    creation_date date NOT NULL
 );
 
 
@@ -177,7 +177,7 @@ ALTER SEQUENCE hotels_place_id_seq OWNED BY hotels.place_id;
 CREATE TABLE places (
     place_id integer NOT NULL,
     creator_id integer NOT NULL,
-    creation_date timestamp without time zone,
+    creation_date date,
     name character varying(100) NOT NULL,
     street character varying(64) NOT NULL,
     num character varying(10) NOT NULL,

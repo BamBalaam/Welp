@@ -107,7 +107,7 @@ def tags_for_one(place)
         next unless user.is_a? String
         h = {}
         h[:placename] = placename
-        h[:tag] = tag
+        h[:tag] = tag.capitalize
         h[:user] = user
         tags.push(h)
       end
